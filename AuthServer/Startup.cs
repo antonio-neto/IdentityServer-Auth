@@ -15,8 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Net;
- 
-
+using AuthServer.Configs;
 
 namespace AuthServer
 {
@@ -51,7 +50,7 @@ namespace AuthServer
                 //.AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
+                .AddInMemoryClients(Config.GetClients(Configuration))
                 .AddAspNetIdentity<AppUser>();
 
                 /* We'll play with this down the road... 

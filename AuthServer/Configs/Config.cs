@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using IdentityServer4.Models;
+using Microsoft.Extensions.Configuration;
 
-namespace AuthServer
+namespace AuthServer.Configs
 {
     public class Config
     {
@@ -26,8 +27,11 @@ namespace AuthServer
             };
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients(IConfiguration configuration)
         {
+          var identityServerOptions = new IdentityServerOptions();
+          configuration.Bind("IdentityServer", identityServerOptions);
+
             return new[]
             {
                 new Client {
@@ -36,9 +40,9 @@ namespace AuthServer
                     ClientName = "Angular SPA",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = { "openid", "profile", "email", "api.read" },
-                    RedirectUris = {"http://localhost:4200/auth-callback"},
-                    PostLogoutRedirectUris = {"http://localhost:4200/"},
-                    AllowedCorsOrigins = {"http://localhost:4200"},
+                    RedirectUris = { identityServerOptions.RedirectUris },
+                    PostLogoutRedirectUris = { identityServerOptions.PostLogoutRedirectUris },
+                    AllowedCorsOrigins = { identityServerOptions.AllowedCorsOrigins },
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenLifetime = 3600
                 },
